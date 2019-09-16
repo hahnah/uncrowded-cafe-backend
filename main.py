@@ -25,14 +25,14 @@ def popular_times(request):
     if api_key is None:
         return flask.jsonify({})
 
-    searching_radius = 500
-    place_types = ['cafe']
-    delimiting_points = calulate_delimiliting_points(latitude, longtitude, searching_radius)
+    SEARCHING_RADIUS = 500
+    PLACE_TYPES = ['cafe']
+    NUMBER_OF_THREADS = 20
+    SHOULD_INCLUDE_PLACES_EVEN_WITHOUT_POPULARTIMES = False
+    delimiting_points = calulate_delimiliting_points(latitude, longtitude, SEARCHING_RADIUS)
     delimiting_point1 = delimiting_points[0]
     delimiting_point2 = delimiting_points[1]
-    number_of_threads = 20
-    should_include_places_even_without_populartimes = False
-    return flask.jsonify(populartimes.get(api_key, place_types, delimiting_point1, delimiting_point2, number_of_threads, searching_radius, should_include_places_even_without_populartimes))
+    return flask.jsonify(populartimes.get(api_key, PLACE_TYPES, delimiting_point1, delimiting_point2, NUMBER_OF_THREADS, SEARCHING_RADIUS, SHOULD_INCLUDE_PLACES_EVEN_WITHOUT_POPULARTIMES))
 
 def calulate_delimiliting_points(latitude, longtitude, serching_radius):
     PI = math.pi
