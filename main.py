@@ -13,22 +13,26 @@ def popular_times(request):
         `make_response <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>`.
     """
     request_json = request.get_json()
-    current_latitude = 35.573016
-    current_longtitude = 139.7174431
+    (latitude, longtitude) = (
+        (request.args.get('latitude'), request.args.get('longtitude')) if request.args and 'latitude' in request.args and 'longtitude' in request.args else
+        (request_json['latitude'], request_json['longtitude']) if request_json and 'latitude' in request_json and 'longtitude' in request_json else
+        (None, None)
+    )
+    if latitude is None or longtitude is None:
+        return flask.jsonify({})
+
+    api_key = os.environ.get('API_KEY', None)
+    if api_key is None:
+        return flask.jsonify({})
+
     searching_radius = 500
-    api_key = os.environ.get('API_KEY', 'Specified environment variable is not set.')
     place_types = ['cafe']
-    delimiting_points = calulate_delimiliting_points(current_latitude, current_longtitude, searching_radius)
+    delimiting_points = calulate_delimiliting_points(latitude, longtitude, searching_radius)
     delimiting_point1 = delimiting_points[0]
     delimiting_point2 = delimiting_points[1]
     number_of_threads = 20
     should_include_places_even_without_populartimes = False
-    if request.args and 'latitude' in request.args and 'longtitude' in request.args:
-        return flask.jsonify(populartimes.get(api_key, place_types, delimiting_point1, delimiting_point2, number_of_threads, searching_radius, should_include_places_even_without_populartimes))
-    elif request_json and 'latitude' in request_json and 'longtitude' in request_json:
-        return flask.jsonify(populartimes.get(api_key, place_types, delimiting_point1, delimiting_point2, number_of_threads, searching_radius, should_include_places_even_without_populartimes))
-    else:
-        return flask.jsonify({})
+    return flask.jsonify(populartimes.get(api_key, place_types, delimiting_point1, delimiting_point2, number_of_threads, searching_radius, should_include_places_even_without_populartimes))
 
 def calulate_delimiliting_points(latitude, longtitude, serching_radius):
     PI = math.pi
