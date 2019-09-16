@@ -18,12 +18,12 @@ def popular_times(request):
         `make_response <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>`.
     """
     request_json = request.get_json()
-    (latitude, longtitude) = (
-        (request.args.get('latitude'), request.args.get('longtitude')) if request.args and 'latitude' in request.args and 'longtitude' in request.args else
-        (request_json['latitude'], request_json['longtitude']) if request_json and 'latitude' in request_json and 'longtitude' in request_json else
+    (latitude, longitude) = (
+        (request.args.get('latitude'), request.args.get('longitude')) if request.args and 'latitude' in request.args and 'longitude' in request.args else
+        (request_json['latitude'], request_json['longitude']) if request_json and 'latitude' in request_json and 'longitude' in request_json else
         (None, None)
     )
-    if latitude is None or longtitude is None:
+    if latitude is None or longitude is None:
         return flask.jsonify({ 'status': 'FAILURE', 'search_result': [] })
 
     api_key = os.environ.get('API_KEY', None)
@@ -34,31 +34,31 @@ def popular_times(request):
     PLACE_TYPES = ['cafe']
     NUMBER_OF_THREADS = 20
     SHOULD_INCLUDE_PLACES_EVEN_WITHOUT_POPULARTIMES = False
-    delimiting_points = calulate_delimiliting_points(latitude, longtitude, SEARCHING_RADIUS)
+    delimiting_points = calulate_delimiliting_points(latitude, longitude, SEARCHING_RADIUS)
     delimiting_point1 = delimiting_points[0]
     delimiting_point2 = delimiting_points[1]
 
     search_result = populartimes.get(api_key, PLACE_TYPES, delimiting_point1, delimiting_point2, NUMBER_OF_THREADS, SEARCHING_RADIUS, SHOULD_INCLUDE_PLACES_EVEN_WITHOUT_POPULARTIMES)
-    formated_result = format_data(latitude, longtitude, search_result)
+    formated_result = format_data(latitude, longitude, search_result)
     result_json = {
         'status': 'SUCCESS',
         'search_result': formated_result,
         'datetime': datetime.now(), # DEV LOG
         # FIXME: timezone does not work
-        'datetime_localized': datetime.now(timezone(timezone_finder.timezone_at(lat=latitude, lng=longtitude))), # DEV LOG
+        'datetime_localized': datetime.now(timezone(timezone_finder.timezone_at(lat=latitude, lng=longitude))), # DEV LOG
         'zz_row_result': search_result # DEV LOG
     }
     return flask.jsonify(result_json)
 
 
-def calulate_delimiliting_points(latitude, longtitude, serching_radius):
+def calulate_delimiliting_points(latitude, longitude, serching_radius):
     PI = math.pi
     EQUATORIAL_RADIUS = 6378136.6
     POLAR_RADIUS = 6356751.9
     latitude_difference = (180 * serching_radius) / (PI * POLAR_RADIUS)
-    longtitude_difference = (180 * serching_radius) / (PI * EQUATORIAL_RADIUS * math.cos(latitude))
-    southwest_delimiliting_point = (latitude - latitude_difference, longtitude - longtitude_difference)
-    northeast_delimiliting_point = (latitude + latitude_difference, longtitude + longtitude_difference)
+    longitude_difference = (180 * serching_radius) / (PI * EQUATORIAL_RADIUS * math.cos(latitude))
+    southwest_delimiliting_point = (latitude - latitude_difference, longitude - longitude_difference)
+    northeast_delimiliting_point = (latitude + latitude_difference, longitude + longitude_difference)
     return (southwest_delimiliting_point, northeast_delimiliting_point)
 
 
