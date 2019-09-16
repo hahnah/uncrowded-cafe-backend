@@ -6,7 +6,9 @@ from pytz import timezone
 from timezonefinder import TimezoneFinder
 from datetime import datetime, date
 
+
 timezone_finder = TimezoneFinder(in_memory=True)
+
 
 def popular_times(request):
     """Responds to any HTTP request.
