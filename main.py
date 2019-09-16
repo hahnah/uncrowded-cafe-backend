@@ -3,6 +3,7 @@ import math
 import populartimes
 import flask
 
+
 def popular_times(request):
     """Responds to any HTTP request.
     Args:
@@ -19,11 +20,11 @@ def popular_times(request):
         (None, None)
     )
     if latitude is None or longtitude is None:
-        return flask.jsonify({})
+        return flask.jsonify({ 'status': 'FAILURE', 'search_result': [] })
 
     api_key = os.environ.get('API_KEY', None)
     if api_key is None:
-        return flask.jsonify({})
+        return flask.jsonify({ 'status': 'FAILURE', 'search_result': [] })
 
     SEARCHING_RADIUS = 500
     PLACE_TYPES = ['cafe']
@@ -32,7 +33,14 @@ def popular_times(request):
     delimiting_points = calulate_delimiliting_points(latitude, longtitude, SEARCHING_RADIUS)
     delimiting_point1 = delimiting_points[0]
     delimiting_point2 = delimiting_points[1]
-    return flask.jsonify(populartimes.get(api_key, PLACE_TYPES, delimiting_point1, delimiting_point2, NUMBER_OF_THREADS, SEARCHING_RADIUS, SHOULD_INCLUDE_PLACES_EVEN_WITHOUT_POPULARTIMES))
+
+    search_result = populartimes.get(api_key, PLACE_TYPES, delimiting_point1, delimiting_point2, NUMBER_OF_THREADS, SEARCHING_RADIUS, SHOULD_INCLUDE_PLACES_EVEN_WITHOUT_POPULARTIMES)
+    result_json = {
+        'status': 'SUCCESS',
+        'search_result': search_result
+    }
+    return flask.jsonify(result_json)
+
 
 def calulate_delimiliting_points(latitude, longtitude, serching_radius):
     PI = math.pi
