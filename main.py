@@ -45,8 +45,6 @@ def popular_times(request):
     result_json = {
         'status': 'SUCCESS',
         'search_result': formated_result,
-        'datetime': datetime.now(), # DEV LOG
-        'datetime_localized': datetime.now(timezone(timezone_finder.timezone_at(lat=latitude, lng=longitude))), # DEV LOG
         'zz_row_result': search_result # DEV LOG
     }
     return flask.jsonify(result_json)
