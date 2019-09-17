@@ -46,7 +46,6 @@ def popular_times(request):
         'status': 'SUCCESS',
         'search_result': formated_result,
         'datetime': datetime.now(), # DEV LOG
-        # FIXME: timezone does not work
         'datetime_localized': datetime.now(timezone(timezone_finder.timezone_at(lat=latitude, lng=longitude))), # DEV LOG
         'zz_row_result': search_result # DEV LOG
     }
@@ -67,7 +66,6 @@ def calulate_delimiliting_points(latitude, longitude, serching_radius):
 def format_data(latitude, longitude, row_data):
     WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     timezone_string = timezone_finder.timezone_at(lat=latitude, lng=longitude)
-    # FIXME: timezone does not work
     current_datetime = datetime.now(timezone(timezone_string))
     current_date_integer = datetime(current_datetime.year, current_datetime.month, current_datetime.day).weekday()
     current_hour = current_datetime.hour
