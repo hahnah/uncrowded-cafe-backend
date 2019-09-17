@@ -75,10 +75,10 @@ def format_place_data(current_date, current_hour, place_data):
     todays_populartimes = list(filter(lambda x: x['name'] == current_date, place_data['populartimes']))[0]
     current_popularity = todays_populartimes['data'][current_hour]
     return {
-        'address': place_data['address'],
+        'address': place_data['address'], # Unicode-escaped string
         'coordinates': place_data['coordinates'],
         'id': place_data['id'],
-        'name': place_data['name'],
+        'name': place_data['name'], # Unicode-escaped string
         'popularity': current_popularity,
         'rating': place_data['rating']
     }
