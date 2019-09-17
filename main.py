@@ -41,10 +41,10 @@ def popular_times(request):
     delimiting_point2 = delimiting_points[1]
 
     search_result = populartimes.get(api_key, PLACE_TYPES, delimiting_point1, delimiting_point2, NUMBER_OF_THREADS, SEARCHING_RADIUS, SHOULD_INCLUDE_PLACES_EVEN_WITHOUT_POPULARTIMES)
-    formated_result = format_data(latitude, longitude, search_result)
+    formatted_result = format_data(latitude, longitude, search_result)
     result_json = {
         'status': 'SUCCESS',
-        'search_result': formated_result,
+        'search_result': formatted_result,
         'zz_row_result': search_result # DEV LOG
     }
     return flask.jsonify(result_json)
