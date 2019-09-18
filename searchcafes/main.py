@@ -10,7 +10,7 @@ from datetime import datetime, date
 timezone_finder = TimezoneFinder(in_memory=True)
 
 
-def popular_times(request):
+def search_cafe(request):
     """Responds to any HTTP request.
     Args:
         request (flask.Request): HTTP request object.
