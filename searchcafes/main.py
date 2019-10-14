@@ -26,11 +26,11 @@ def search_cafe(request):
         (None, None)
     )
     if latitude is None or longitude is None:
-        return flask.jsonify({ 'status': 'FAILURE', 'search_result': [] })
+        return add_cors_headers(flask.jsonify({ 'status': 'FAILURE', 'search_result': [] }))
 
     api_key = os.environ.get('API_KEY', None)
     if api_key is None:
-        return flask.jsonify({ 'status': 'FAILURE', 'search_result': [] })
+        return add_cors_headers(flask.jsonify({ 'status': 'FAILURE', 'search_result': [] }))
 
     SEARCHING_RADIUS = 500
     PLACE_TYPES = ['cafe']
@@ -47,8 +47,13 @@ def search_cafe(request):
         'search_result': formatted_result,
         'zz_row_result': search_result # DEV LOG
     }
-    return flask.jsonify(result_json)
+    return add_cors_headers(flask.jsonify(result_json))
 
+def add_cors_headers(response):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+    response.headers['Access-Control-Allow-Methods'] = 'POST'
+    return response
 
 def calulate_delimiliting_points(latitude, longitude, serching_radius):
     PI = math.pi
