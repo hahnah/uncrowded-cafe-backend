@@ -32,7 +32,7 @@ def search_cafes(request):
     if api_key is None:
         return add_cors_headers(flask.jsonify({ 'status': 'FAILURE', 'search_result': [] }))
 
-    SEARCHING_RADIUS = 500
+    SEARCHING_RADIUS = 300
     PLACE_TYPES = ['cafe']
     NUMBER_OF_THREADS = 20
     SHOULD_INCLUDE_PLACES_EVEN_WITHOUT_POPULARTIMES = False
